@@ -92,34 +92,24 @@
       ]
     };
 
-    function distanceFromRoot(node, distance=0) {
-      if (node.tagName !== 'DIV') return Infinity;
-      const name = node.querySelector('.vampire-name').innerText;
-      if (name === 'Root') return distance;
-      return distanceFromRoot(node.parentElement, distance+1);
-    }
-
-    function createVampire(name) {
-      const element = document.createElement('div')
-      const content = `🧛‍♀️ <span class='vampire-name'>${name}</span>`
-      element.innerHTML = content;
+    function buildTree(node) {
+      const element = document.createElement('div');
+      element.innerHTML = `🧛‍♂️ <span class='vampire-name'>${node.name}</span>`;
       element.addEventListener('click', (event) => {
-        event.stopPropagation(); // Something weird happens if you don't stopPropagation 🤔
-        alert(`${name} is ${distanceFromRoot(element)} from the Root`);
+        event.stopPropagation();
+        console.log(`Clicked ${node.name}`);
       });
-      return element;
-    }
 
-    function buildVampireTree(node) {
-      const element = createVampire(node.name);
       node.children?.forEach(child => {
-        element.appendChild(buildVampireTree(child));
+        const childElement = buildTree(child);
+        element.append(childElement);
       });
+
       return element;
     }
 
-    const vampireNodeTree = buildVampireTree(vampireTree);
-    document.querySelector('body').appendChild(vampireNodeTree);
+
+    document.body.append(buildTree(vampireTree));
   </script>
 </body>
 </html>
